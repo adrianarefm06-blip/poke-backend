@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokewiki</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --secondary: #8b5cf6;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            width: 100%;
+            padding: 20px 40px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            padding: 40px 20px;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* Sección de Búsqueda */
+        .search-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 18px 24px 18px 50px;
+            border-radius: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-family: var(--font-main);
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+            /* Scrollbar styling */
+        }
+
+        .results-grid::-webkit-scrollbar { width: 8px; }
+        .results-grid::-webkit-scrollbar-track { background: transparent; }
+        .results-grid::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        .results-grid::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        .pokemon-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .poke-sprite {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .pokemon-card:hover .poke-sprite {
+            transform: scale(1.1);
+        }
+
+        .poke-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .poke-id {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .poke-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-add:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* Sección del Equipo */
+        .team-section {
+            width: 380px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            height: fit-content;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .team-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .team-count {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .team-count.full {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .team-member {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .team-member:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .btn-remove {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background: var(--danger);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* Notificaciones */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.success { border-left: 4px solid #10b981; }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; }
+            .team-section { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1><i class="fas fa-compact-disc fa-spin-pulse"></i> PokeWiki</h1>
+    </nav>
+
+    <div class="main-container">
+        <!-- Panel Izquierdo: Buscador -->
+        <section class="search-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar Pokémon por nombre..." autocomplete="off">
+            </div>
+            
+            <div id="loading" style="display:none;"><div class="loader"></div></div>
+            <div class="results-grid" id="resultsGrid">
+                <!-- Tarjetas de resultados -->
+            </div>
+        </section>
+
+        <!-- Panel Derecho: Equipo -->
+        <aside class="team-section">
+            <div class="team-header">
+                <h2>Mi Equipo</h2>
+                <span class="team-count" id="teamCount">0/6</span>
+            </div>
+            <div class="team-list" id="teamList">
+                <!-- Miembros del equipo -->
+            </div>
+        </aside>
+    </div>
+
+    <!-- Notificación -->
+    <div id="toast" class="toast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMsg">Mensaje</span>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api/pokemon';
+        let teamData = [];
+        let searchTimeout = null;
+
+        // Elementos DOM
+        const searchInput = document.getElementById('searchInput');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const teamList = document.getElementById('teamList');
+        const teamCount = document.getElementById('teamCount');
+        const loading = document.getElementById('loading');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeam();
+            searchPokemon(''); // Cargar todos inicialmente
+        });
+
+        // Búsqueda con debounce
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchPokemon(e.target.value.trim());
+            }, 300); // 300ms delay para no saturar
+        });
+
+        // Buscar Pokémon
+        async function searchPokemon(query) {
+            resultsGrid.innerHTML = '';
+            loading.style.display = 'block';
+
+            try {
+                // Si está vacío, cargar los primeros 100 para no bloquear la UI
+                // Pero como el backend devuelve todo, la red puede ser lenta. 
+                // Lo manejaremos limitando la renderización en el frontend si es necesario.
+                const res = await fetch(`${API_BASE}/search?name=${query}`);
+                const data = await res.json();
+                
+                loading.style.display = 'none';
+                
+                if (data.length === 0) {
+                    resultsGrid.innerHTML = '<p style="color:var(--text-muted); width: 100%; text-align:center;">No se encontraron Pokémon.</p>';
+                    return;
+                }
+
+                // Renderizamos un máximo de 50 para mantener la interfaz rápida si no hay filtro
+                const renderLimit = query === '' ? 50 : data.length;
+                
+                data.slice(0, renderLimit).forEach(poke => {
+                    const isEnEquipo = teamData.some(t => t.pokemonId === poke.id);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'pokemon-card';
+                    card.innerHTML = `
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.id}.png" alt="${poke.name}" class="poke-sprite" loading="lazy">
+                        <div class="poke-info-container">
+                            <div class="poke-name">${poke.name}</div>
+                            <span class="poke-id">#${poke.id.toString().padStart(4, '0')}</span>
+                        </div>
+                        <button class="btn-add" onclick="addToTeam(${poke.id}, '${poke.name}')" ${isEnEquipo ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+                            <i class="fas ${isEnEquipo ? 'fa-check' : 'fa-plus'}"></i> 
+                            ${isEnEquipo ? 'En Equipo' : 'Añadir'}
+                        </button>
+                    `;
+                    resultsGrid.appendChild(card);
+                });
+                
+                if(query === '' && data.length > 50) {
+                     const msg = document.createElement('p');
+                     msg.style = "color:var(--text-muted); width: 100%; text-align:center; grid-column: 1 / -1; margin-top:20px;";
+                     msg.innerText = `Mostrando 50 de ${data.length} Pokémon. Usa el buscador para encontrar más.`;
+                     resultsGrid.appendChild(msg);
+                }
+
+            } catch (error) {
+                loading.style.display = 'none';
+                showToast("Error al conectar con el servidor", "error");
+            }
+        }
+
+        // Cargar Equipo
+        async function loadTeam() {
+            try {
+                const res = await fetch(`${API_BASE}/team`);
+                teamData = await res.json();
+                renderTeam();
+                // Refrescar resultados para actualizar botones
+                searchPokemon(searchInput.value.trim()); 
+            } catch (error) {
+                console.error("Error cargando equipo", error);
+            }
+        }
+
+        // Renderizar Equipo
+        function renderTeam() {
+            teamCount.innerText = `${teamData.length}/6`;
+            if (teamData.length >= 6) {
+                teamCount.classList.add('full');
+            } else {
+                teamCount.classList.remove('full');
+            }
+
+            teamList.innerHTML = '';
+            
+            if (teamData.length === 0) {
+                teamList.innerHTML = `
+                    <div style="text-align:center; color:var(--text-muted); padding:30px 0;">
+                        <i class="fas fa-ghost" style="font-size:2rem; margin-bottom:10px; opacity:0.5;"></i>
+                        <p>Tu equipo está vacío.</p>
+                        <p style="font-size:0.85rem; margin-top:5px;">¡Añade algunos Pokémon!</p>
+                    </div>`;
+                return;
+            }
+
+            teamData.forEach(member => {
+                const div = document.createElement('div');
+                div.className = 'team-member';
+                div.innerHTML = `
+                    <div class="member-info">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${member.pokemonId}.png" alt="${member.pokemonName}" style="width: 40px; height: 40px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <span class="member-name">${member.pokemonName}</span>
+                            <span class="poke-id" style="background:rgba(0,0,0,0.3); font-size: 0.75rem; padding: 2px 6px; width: fit-content;">#${member.pokemonId.toString().padStart(4,'0')}</span>
+                        </div>
+                    </div>
+                    <button class="btn-remove" onclick="removeFromTeam(${member.id})" title="Quitar del equipo">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                teamList.appendChild(div);
+            });
+        }
+
+        // Añadir al Equipo
+        async function addToTeam(pokemonId, pokemonName) {
+            if (teamData.length >= 6) {
+                showToast("¡Tu equipo ya está lleno! (Máx. 6)", "error");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/team`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pokemonId, pokemonName })
+                });
+
+                if (res.ok) {
+                    showToast(`${pokemonName.toUpperCase()} añadido al equipo`, "success");
+                    loadTeam();
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || "Error al añadir", "error");
+                }
+            } catch (error) {
+                showToast("Error de conexión", "error");
+            }
+        }
+
+        // Quitar del Equipo
+        async function removeFromTeam(id) {
+            try {
+                const res = await fetch(`${API_BASE}/team/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast("Pokémon eliminado del equipo", "success");
+                    loadTeam();
+                }
+            } catch (error) {
+                showToast("Error de conexión", "error");
+            }
+        }
+
+        // Mostrar Notificación (Toast)
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toastMsg');
+            
+            toast.className = 'toast'; // Reset classes
+            toast.classList.add(type);
+            msg.innerText = message;
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
