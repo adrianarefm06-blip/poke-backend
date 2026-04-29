@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokewiki & Team Builder</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
+
     <style>
         :root {
-            --bg-color: #0f172a;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.5);
-            --secondary: #8b5cf6;
+            --bg-color: #f4f4f4;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --primary: #e3350d;
+            --primary-glow: rgba(227, 53, 13, 0.4);
+            --secondary: #222224;
             --danger: #ef4444;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --text-main: #222224;
+            --text-muted: #666666;
             --font-main: 'Outfit', sans-serif;
+            --white: #ffffff;
         }
 
         * {
@@ -31,10 +33,15 @@
         body {
             font-family: var(--font-main);
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+            background-image: linear-gradient(
+                to bottom, 
+                var(--primary) 0%, 
+                var(--primary) calc(50vh - 10px), 
+                var(--secondary) calc(50vh - 10px), 
+                var(--secondary) calc(50vh + 10px), 
+                var(--bg-color) calc(50vh + 10px), 
+                var(--bg-color) 100%
+            );
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
@@ -54,30 +61,33 @@
             top: 0;
             left: 0;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
+            background: transparent;
             transition: opacity 0.5s ease;
         }
 
         .auth-container {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            background: var(--white);
+            border: 12px solid var(--secondary);
+            border-radius: 50%;
             padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 90vw;
+            max-width: 450px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 0 0 10px var(--white), 0 0 25px 10px rgba(0,0,0,0.4);
             text-align: center;
+            position: relative;
         }
 
         .auth-container h2 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #60a5fa, #c084fc);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .auth-form {
@@ -93,7 +103,7 @@
 
         .input-group i {
             position: absolute;
-            left: 15px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
@@ -102,9 +112,9 @@
         .input-group input {
             width: 100%;
             padding: 15px 15px 15px 45px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
             color: var(--text-main);
             font-family: var(--font-main);
             font-size: 1rem;
@@ -114,25 +124,28 @@
 
         .input-group input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
+            box-shadow: 0 0 10px var(--primary-glow);
+            background: var(--white);
         }
 
         .btn-auth {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             color: white;
-            border: none;
+            border: 2px solid var(--secondary);
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 25px;
             font-family: var(--font-main);
-            font-weight: 600;
+            font-weight: 800;
             font-size: 1.1rem;
+            text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         .btn-auth:hover {
-            opacity: 0.9;
-            box-shadow: 0 0 20px var(--primary-glow);
+            background: #b32a0a;
+            box-shadow: 0 5px 15px var(--primary-glow);
             transform: translateY(-2px);
         }
 
@@ -145,12 +158,12 @@
         .toggle-auth span {
             color: var(--primary);
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 800;
             transition: color 0.3s ease;
         }
 
         .toggle-auth span:hover {
-            color: #60a5fa;
+            color: var(--secondary);
             text-decoration: underline;
         }
 
@@ -167,16 +180,15 @@
         .navbar {
             width: 100%;
             padding: 20px 40px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(15, 23, 42, 0.8);
-            border-bottom: 1px solid var(--glass-border);
+            background: var(--primary);
+            border-bottom: 10px solid var(--secondary);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .navbar-brand {
@@ -187,42 +199,42 @@
 
         .navbar h1 {
             font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #60a5fa, #c084fc);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 var(--secondary);
         }
-        
+
         .user-profile {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
+
         .user-greeting {
             font-weight: 600;
             color: var(--text-main);
         }
-        
+
         .btn-logout {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: var(--white);
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
             padding: 8px 16px;
             border-radius: 20px;
             font-family: var(--font-main);
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        
+
         .btn-logout:hover {
-            background: var(--danger);
-            color: white;
+            background: #e5e5e5;
+            transform: scale(1.05);
         }
 
         .main-container {
@@ -252,20 +264,19 @@
             width: 100%;
             padding: 18px 24px 18px 50px;
             border-radius: 50px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            background: var(--white);
+            border: 3px solid var(--secondary);
             color: var(--text-main);
             font-size: 1.1rem;
             font-family: var(--font-main);
             outline: none;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 0 var(--secondary);
         }
 
         .search-box input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-            background: rgba(30, 41, 59, 0.9);
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 var(--secondary);
         }
 
         .search-box i {
@@ -286,35 +297,42 @@
             padding-right: 10px;
         }
 
-        .results-grid::-webkit-scrollbar { width: 8px; }
-        .results-grid::-webkit-scrollbar-track { background: transparent; }
-        .results-grid::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        .results-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .results-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .results-grid::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
 
         .pokemon-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            background: var(--white);
+            border: 3px solid var(--secondary);
             border-radius: 16px;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 0 var(--secondary);
         }
 
         .pokemon-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.2);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 var(--secondary);
         }
 
         .poke-sprite {
             width: 96px;
             height: 96px;
             object-fit: contain;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
             transition: transform 0.3s ease;
         }
 
@@ -330,12 +348,13 @@
         }
 
         .poke-id {
-            background: rgba(255,255,255,0.1);
+            background: #f0f0f0;
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
+            border: 1px solid #ddd;
         }
 
         .poke-name {
@@ -347,15 +366,15 @@
         }
 
         .btn-add {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
+            background: var(--white);
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
             padding: 10px 20px;
             border-radius: 25px;
             font-family: var(--font-main);
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -364,20 +383,19 @@
         }
 
         .btn-add:hover {
-            opacity: 0.9;
-            box-shadow: 0 0 15px var(--primary-glow);
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--secondary);
         }
 
         .team-section {
             width: 380px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            background: var(--white);
+            border: 4px solid var(--secondary);
             border-radius: 24px;
             padding: 30px;
             height: fit-content;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 0 var(--secondary);
         }
 
         .team-header {
@@ -386,7 +404,7 @@
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 3px dashed var(--secondary);
         }
 
         .team-header h2 {
@@ -396,16 +414,18 @@
         }
 
         .team-count {
-            background: rgba(255,255,255,0.1);
+            background: #f0f0f0;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 800;
         }
 
         .team-count.full {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
+            background: var(--primary);
+            color: var(--white);
         }
 
         .team-list {
@@ -415,15 +435,21 @@
         }
 
         .team-member {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--glass-border);
+            background: var(--white);
+            border: 2px solid var(--secondary);
             border-radius: 12px;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             animation: slideIn 0.3s ease forwards;
+            box-shadow: 0 3px 0 var(--secondary);
+        }
+
+        .team-member:hover {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--secondary);
         }
 
         .member-info {
@@ -431,7 +457,7 @@
             align-items: center;
             gap: 12px;
         }
-        
+
         .member-name {
             font-weight: 600;
             text-transform: capitalize;
@@ -439,14 +465,21 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .btn-remove {
-            background: rgba(239, 68, 68, 0.1);
-            color: #fca5a5;
-            border: none;
+            background: var(--white);
+            color: var(--danger);
+            border: 2px solid var(--danger);
             width: 35px;
             height: 35px;
             border-radius: 50%;
@@ -459,7 +492,7 @@
 
         .btn-remove:hover {
             background: var(--danger);
-            color: white;
+            color: var(--white);
             transform: rotate(90deg);
         }
 
@@ -467,17 +500,16 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
+            background: var(--secondary);
+            border: 3px solid var(--secondary);
             padding: 15px 25px;
             border-radius: 12px;
             color: white;
-            font-weight: 500;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -492,29 +524,122 @@
         .toast.error {
             border-left: 4px solid var(--danger);
         }
-        
+
         .toast.success {
             border-left: 4px solid #10b981;
         }
 
         .loader {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid var(--primary);
+            border: 4px solid var(--white);
+            border-top: 4px solid var(--primary);
+            border-bottom: 4px solid var(--secondary);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 40px auto;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
         @media (max-width: 900px) {
-            .main-container { flex-direction: column; }
-            .team-section { width: 100%; }
+            .main-container {
+                flex-direction: column;
+                padding: 20px 15px;
+                gap: 25px;
+            }
+
+            .team-section {
+                width: 100%;
+                padding: 25px 20px;
+            }
+
+            .results-grid {
+                max-height: 50vh;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .navbar h1 {
+                font-size: 1.6rem;
+            }
+
+            .user-profile {
+                width: 100%;
+                justify-content: space-between;
+                font-size: 0.95rem;
+            }
+
+            .btn-logout {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+
+            .auth-container {
+                margin: 20px;
+                padding: 30px 20px;
+                width: calc(100% - 40px);
+            }
+
+            .auth-container h2 {
+                font-size: 1.6rem;
+            }
+
+            .search-box input {
+                padding: 15px 20px 15px 45px;
+                font-size: 1rem;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+                padding-right: 5px;
+            }
+
+            .pokemon-card {
+                padding: 15px 10px;
+                gap: 10px;
+            }
+
+            .poke-sprite {
+                width: 70px;
+                height: 70px;
+            }
+
+            .poke-name {
+                font-size: 1.1rem;
+            }
+
+            .btn-add {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+
+            .toast {
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+                justify-content: center;
+                text-align: center;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- AUTH SECTION -->
@@ -544,7 +669,7 @@
     <div id="appContainer">
         <nav class="navbar">
             <div class="navbar-brand">
-                <h1><i class="fas fa-compact-disc fa-spin-pulse"></i> PokeWiki</h1>
+                <h1>PokeWiki</h1>
             </div>
             <div class="user-profile">
                 <span class="user-greeting">Hola, <span id="displayUsername">Entrenador</span>!</span>
@@ -560,7 +685,9 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Buscar Pokémon por nombre..." autocomplete="off">
                 </div>
-                <div id="loading" style="display:none;"><div class="loader"></div></div>
+                <div id="loading" style="display:none;">
+                    <div class="loader"></div>
+                </div>
                 <div class="results-grid" id="resultsGrid"></div>
             </section>
 
@@ -582,7 +709,7 @@
     <script>
         // BACKEND URL
         const API_BASE = 'https://poke-backend-production-a7c8.up.railway.app/api';
-        
+
         let teamData = [];
         let searchTimeout = null;
         let currentUser = null;
@@ -595,7 +722,7 @@
         const teamList = document.getElementById('teamList');
         const teamCount = document.getElementById('teamCount');
         const loading = document.getElementById('loading');
-        
+
         // Check session on load
         document.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('pokeUser');
@@ -610,7 +737,7 @@
             isLoginMode = !isLoginMode;
             document.getElementById('authTitle').innerText = isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta';
             document.getElementById('btnAuthSubmit').innerHTML = isLoginMode ? 'Entrar <i class="fas fa-arrow-right"></i>' : 'Registrarse <i class="fas fa-user-plus"></i>';
-            document.getElementById('authToggleText').innerHTML = isLoginMode 
+            document.getElementById('authToggleText').innerHTML = isLoginMode
                 ? '¿No tienes cuenta? <span onclick="toggleAuthMode()">Regístrate aquí</span>'
                 : '¿Ya tienes cuenta? <span onclick="toggleAuthMode()">Inicia sesión</span>';
         }
@@ -619,7 +746,7 @@
             e.preventDefault();
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
-            
+
             if (!user || !pass) {
                 showToast("Por favor, rellena todos los campos", "error");
                 return;
@@ -637,9 +764,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: user, password: pass })
                 });
-                
+
                 const data = await res.json();
-                
+
                 if (res.ok) {
                     showToast(data.message || (isLoginMode ? "Login exitoso" : "Registro exitoso"), "success");
                     if (isLoginMode) {
@@ -670,7 +797,7 @@
                 // Trigger reflow
                 void appContainer.offsetWidth;
                 appContainer.style.opacity = '1';
-                
+
                 document.getElementById('displayUsername').innerText = currentUser;
                 loadTeam();
                 searchPokemon('');
@@ -680,7 +807,7 @@
         function logout() {
             currentUser = null;
             localStorage.removeItem('pokeUser');
-            
+
             appContainer.style.opacity = '0';
             setTimeout(() => {
                 appContainer.style.display = 'none';
@@ -688,7 +815,7 @@
                 // Trigger reflow
                 void authSection.offsetWidth;
                 authSection.style.opacity = '1';
-                
+
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 teamData = [];
@@ -705,26 +832,24 @@
 
         async function searchPokemon(query) {
             if (!currentUser) return;
-            
+
             resultsGrid.innerHTML = '';
             loading.style.display = 'block';
 
             try {
                 const res = await fetch(`${API_BASE}/pokemon/search?name=${query}`);
                 const data = await res.json();
-                
+
                 loading.style.display = 'none';
-                
+
                 if (data.length === 0) {
                     resultsGrid.innerHTML = '<p style="color:var(--text-muted); width: 100%; text-align:center;">No se encontraron Pokémon.</p>';
                     return;
                 }
 
-                const renderLimit = query === '' ? 50 : data.length;
-                
-                data.slice(0, renderLimit).forEach(poke => {
+                data.forEach(poke => {
                     const isEnEquipo = teamData.some(t => t.pokemonId === poke.id);
-                    
+
                     const card = document.createElement('div');
                     card.className = 'pokemon-card';
                     card.innerHTML = `
@@ -748,12 +873,12 @@
 
         async function loadTeam() {
             if (!currentUser) return;
-            
+
             try {
                 const res = await fetch(`${API_BASE}/pokemon/team?username=${currentUser}`);
                 teamData = await res.json();
                 renderTeam();
-                searchPokemon(searchInput.value.trim()); 
+                searchPokemon(searchInput.value.trim());
             } catch (error) {
                 console.error("Error cargando equipo", error);
             }
@@ -768,7 +893,7 @@
             }
 
             teamList.innerHTML = '';
-            
+
             if (teamData.length === 0) {
                 teamList.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px 0;"><p>Tu equipo está vacío.</p></div>';
                 return;
@@ -837,4 +962,5 @@
         }
     </script>
 </body>
+
 </html>
