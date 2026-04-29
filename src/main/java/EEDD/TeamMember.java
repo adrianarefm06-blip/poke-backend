@@ -14,12 +14,15 @@ public class TeamMember {
     
     private String pokemonName;
 
+    private String username;
+
     public TeamMember() {
     }
 
-    public TeamMember(int pokemonId, String pokemonName) {
+    public TeamMember(int pokemonId, String pokemonName, String username) {
         this.pokemonId = pokemonId;
         this.pokemonName = pokemonName;
+        this.username = username;
     }
 
     public int getId() {
@@ -44,5 +47,13 @@ public class TeamMember {
 
     public void setPokemonName(String pokemonName) {
         this.pokemonName = pokemonName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

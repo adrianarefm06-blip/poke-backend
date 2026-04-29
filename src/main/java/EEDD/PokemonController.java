@@ -32,13 +32,16 @@ public class PokemonController {
     }
 
     @GetMapping("/team")
-    public List<TeamMember> getTeam() {
-        return teamMemberRepository.findAll();
+    public List<TeamMember> getTeam(@RequestParam String username) {
+        return teamMemberRepository.findByUsername(username);
     }
 
     @PostMapping("/team")
     public ResponseEntity<?> addToTeam(@RequestBody TeamMember member) {
-        if (teamMemberRepository.count() >= 6) {
+        if (member.getUsername() == null || member.getUsername().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\": \"Usuario requerido.\"}");
+        }
+        if (teamMemberRepository.countByUsername(member.getUsername()) >= 6) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\": \"El equipo ya tiene 6 Pokémon. Elimina alguno antes de añadir otro.\"}");
         }
         TeamMember saved = teamMemberRepository.save(member);

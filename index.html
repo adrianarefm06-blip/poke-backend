@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokewiki</title>
+    <title>Pokewiki & Team Builder</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -43,6 +43,127 @@
             align-items: center;
         }
 
+        /* Login / Auth Section */
+        #authSection {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            transition: opacity 0.5s ease;
+        }
+
+        .auth-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-auth:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .toggle-auth {
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .toggle-auth span {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-auth span:hover {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        /* App Layout */
+        #appContainer {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
         .navbar {
             width: 100%;
             padding: 20px 40px;
@@ -51,11 +172,17 @@
             background: rgba(15, 23, 42, 0.8);
             border-bottom: 1px solid var(--glass-border);
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .navbar h1 {
@@ -65,9 +192,37 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+        
+        .user-profile {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
+        }
+        
+        .user-greeting {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
         }
 
         .main-container {
@@ -271,6 +426,18 @@
             animation: slideIn 0.3s ease forwards;
         }
 
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .member-name {
+            font-weight: 600;
+            text-transform: capitalize;
+            font-size: 1.1rem;
+        }
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(20px); }
             to { opacity: 1; transform: translateX(0); }
@@ -322,6 +489,14 @@
             opacity: 1;
         }
 
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
         .loader {
             border: 3px solid rgba(255,255,255,0.1);
             border-top: 3px solid var(--primary);
@@ -342,27 +517,61 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <h1><i class="fas fa-compact-disc fa-spin-pulse"></i> PokeWiki</h1>
-    </nav>
-
-    <div class="main-container">
-        <section class="search-section">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Buscar Pokémon por nombre..." autocomplete="off">
+    <!-- AUTH SECTION -->
+    <div id="authSection">
+        <div class="auth-container">
+            <h2 id="authTitle">Iniciar Sesión</h2>
+            <form id="authForm" class="auth-form" onsubmit="handleAuth(event)">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Nombre de usuario" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn-auth" id="btnAuthSubmit">
+                    Entrar <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            <div class="toggle-auth">
+                <p id="authToggleText">¿No tienes cuenta? <span onclick="toggleAuthMode()">Regístrate aquí</span></p>
             </div>
-            <div id="loading" style="display:none;"><div class="loader"></div></div>
-            <div class="results-grid" id="resultsGrid"></div>
-        </section>
+        </div>
+    </div>
 
-        <aside class="team-section">
-            <div class="team-header">
-                <h2>Mi Equipo</h2>
-                <span class="team-count" id="teamCount">0/6</span>
+    <!-- APP SECTION -->
+    <div id="appContainer">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h1><i class="fas fa-compact-disc fa-spin-pulse"></i> PokeWiki</h1>
             </div>
-            <div class="team-list" id="teamList"></div>
-        </aside>
+            <div class="user-profile">
+                <span class="user-greeting">Hola, <span id="displayUsername">Entrenador</span>!</span>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Salir
+                </button>
+            </div>
+        </nav>
+
+        <div class="main-container">
+            <section class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar Pokémon por nombre..." autocomplete="off">
+                </div>
+                <div id="loading" style="display:none;"><div class="loader"></div></div>
+                <div class="results-grid" id="resultsGrid"></div>
+            </section>
+
+            <aside class="team-section">
+                <div class="team-header">
+                    <h2>Mi Equipo</h2>
+                    <span class="team-count" id="teamCount">0/6</span>
+                </div>
+                <div class="team-list" id="teamList"></div>
+            </aside>
+        </div>
     </div>
 
     <div id="toast" class="toast">
@@ -371,23 +580,122 @@
     </div>
 
     <script>
-        // LA URL DE TU BACKEND EN RAILWAY
-        const API_BASE = 'https://poke-backend-production-a7c8.up.railway.app/api/pokemon';
+        // BACKEND URL
+        const API_BASE = 'https://poke-backend-production-a7c8.up.railway.app/api';
         
         let teamData = [];
         let searchTimeout = null;
+        let currentUser = null;
+        let isLoginMode = true;
 
+        const authSection = document.getElementById('authSection');
+        const appContainer = document.getElementById('appContainer');
         const searchInput = document.getElementById('searchInput');
         const resultsGrid = document.getElementById('resultsGrid');
         const teamList = document.getElementById('teamList');
         const teamCount = document.getElementById('teamCount');
         const loading = document.getElementById('loading');
-
+        
+        // Check session on load
         document.addEventListener('DOMContentLoaded', () => {
-            loadTeam();
-            searchPokemon('');
+            const savedUser = localStorage.getItem('pokeUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                showApp();
+            }
         });
 
+        // AUTHENTICATION LOGIC
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('authTitle').innerText = isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta';
+            document.getElementById('btnAuthSubmit').innerHTML = isLoginMode ? 'Entrar <i class="fas fa-arrow-right"></i>' : 'Registrarse <i class="fas fa-user-plus"></i>';
+            document.getElementById('authToggleText').innerHTML = isLoginMode 
+                ? '¿No tienes cuenta? <span onclick="toggleAuthMode()">Regístrate aquí</span>'
+                : '¿Ya tienes cuenta? <span onclick="toggleAuthMode()">Inicia sesión</span>';
+        }
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            
+            if (!user || !pass) {
+                showToast("Por favor, rellena todos los campos", "error");
+                return;
+            }
+
+            const endpoint = isLoginMode ? '/users/login' : '/users/register';
+            const btn = document.getElementById('btnAuthSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showToast(data.message || (isLoginMode ? "Login exitoso" : "Registro exitoso"), "success");
+                    if (isLoginMode) {
+                        currentUser = data.username || user;
+                        localStorage.setItem('pokeUser', currentUser);
+                        setTimeout(showApp, 500);
+                    } else {
+                        // Switch to login mode automatically after register
+                        toggleAuthMode();
+                        document.getElementById('password').value = '';
+                    }
+                } else {
+                    showToast(data.error || "Error en la autenticación", "error");
+                }
+            } catch (error) {
+                showToast("Error de conexión con el servidor", "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function showApp() {
+            authSection.style.opacity = '0';
+            setTimeout(() => {
+                authSection.style.display = 'none';
+                appContainer.style.display = 'flex';
+                // Trigger reflow
+                void appContainer.offsetWidth;
+                appContainer.style.opacity = '1';
+                
+                document.getElementById('displayUsername').innerText = currentUser;
+                loadTeam();
+                searchPokemon('');
+            }, 500);
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('pokeUser');
+            
+            appContainer.style.opacity = '0';
+            setTimeout(() => {
+                appContainer.style.display = 'none';
+                authSection.style.display = 'flex';
+                // Trigger reflow
+                void authSection.offsetWidth;
+                authSection.style.opacity = '1';
+                
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                teamData = [];
+            }, 500);
+        }
+
+        // APP LOGIC
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
@@ -396,11 +704,13 @@
         });
 
         async function searchPokemon(query) {
+            if (!currentUser) return;
+            
             resultsGrid.innerHTML = '';
             loading.style.display = 'block';
 
             try {
-                const res = await fetch(`${API_BASE}/search?name=${query}`);
+                const res = await fetch(`${API_BASE}/pokemon/search?name=${query}`);
                 const data = await res.json();
                 
                 loading.style.display = 'none';
@@ -437,8 +747,10 @@
         }
 
         async function loadTeam() {
+            if (!currentUser) return;
+            
             try {
-                const res = await fetch(`${API_BASE}/team`);
+                const res = await fetch(`${API_BASE}/pokemon/team?username=${currentUser}`);
                 teamData = await res.json();
                 renderTeam();
                 searchPokemon(searchInput.value.trim()); 
@@ -485,15 +797,18 @@
             }
 
             try {
-                const res = await fetch(`${API_BASE}/team`, {
+                const res = await fetch(`${API_BASE}/pokemon/team`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pokemonId, pokemonName })
+                    body: JSON.stringify({ pokemonId, pokemonName, username: currentUser })
                 });
 
                 if (res.ok) {
                     showToast(`${pokemonName.toUpperCase()} añadido`, "success");
                     loadTeam();
+                } else {
+                    const data = await res.json();
+                    showToast(data.error || "Error al añadir", "error");
                 }
             } catch (error) {
                 showToast("Error de conexión", "error");
@@ -502,7 +817,7 @@
 
         async function removeFromTeam(id) {
             try {
-                const res = await fetch(`${API_BASE}/team/${id}`, { method: 'DELETE' });
+                const res = await fetch(`${API_BASE}/pokemon/team/${id}`, { method: 'DELETE' });
                 if (res.ok) {
                     showToast("Eliminado del equipo", "success");
                     loadTeam();
